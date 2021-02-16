@@ -29,5 +29,4 @@ def higher_lower(min_value, max_value, callback):
 
 
 def midpoint(x, y):
-    mid = x + ((y - x) // 2)
-    return mid
+    return x + ((y - x) // 2)

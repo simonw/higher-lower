@@ -1,6 +1,6 @@
 from hypothesis import given
 import hypothesis.strategies as st
-from higher_lower import higher_lower, midpoint, ActualIs
+import higher_lower
 import pytest
 import sys
 
@@ -20,27 +20,29 @@ SYS_MAX = sys.maxsize
     ),
 )
 def test_midpoint(x, y, expected):
-    assert midpoint(x, y) == expected
+    assert higher_lower.midpoint(x, y) == expected
 
 
 def test_higher_lower_basic():
     callback = make_callback(4)
-    result = higher_lower(0, 10, callback)
+    result = higher_lower.higher_lower(0, 10, callback)
     assert result == 4
 
 
 @given(st.integers(min_value=SYS_MIN, max_value=SYS_MAX))
 def test_higher_lower_with_hypothesis(integer):
-    assert higher_lower(SYS_MIN, SYS_MAX, make_callback(integer)) == integer
+    assert (
+        higher_lower.higher_lower(SYS_MIN, SYS_MAX, make_callback(integer)) == integer
+    )
 
 
 def make_callback(integer):
     def callback(candidate):
         if candidate == integer:
-            return ActualIs.MATCH
+            return higher_lower.ActualIs.MATCH
         elif candidate > integer:
-            return ActualIs.LOWER
+            return higher_lower.ActualIs.LOWER
         else:
-            return ActualIs.HIGHER
+            return higher_lower.ActualIs.HIGHER
 
     return callback
